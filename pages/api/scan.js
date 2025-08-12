@@ -36,7 +36,11 @@ export default async function handler(req, res) {
       url: u.toString(),
       violations: results.violations.length,
       incomplete: results.incomplete.length,
-      byImpact: results.violations.reduce((acc, v) => ((acc[v.impact || "unknown"] = (acc[v.impact || "unknown"] || 0) + 1), acc), {})
+      byImpact: results.violations.reduce((acc, v) => {
+        const k = v.impact || "unknown";
+        acc[k] = (acc[k] || 0) + 1;
+        return acc;
+      }, {})
     };
     res.status(200).json({ summary, results });
   } catch (e) {
